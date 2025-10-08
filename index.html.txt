@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>منصة حصيف — البوابة الوطنية للتكامل التنموي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/css/style.css?v=3002">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script defer src="./assets/js/app.js?v=3002"></script>
+<script defer src="./assets/js/charts.js?v=3002"></script>
+<script defer src="./assets/js/maps.js?v=3002"></script>
+</head><body>
+<header class="header">
+  <div class="container wrap">
+    <div class="brand"><img src="./assets/img/hasseef.png" alt="حصيف"><div><div style="font-weight:900">منصة حصيف</div><div class="subline">البوابة الوطنية للتكامل التنموي</div></div></div>
+    <div class="meta-logos"><img src="./assets/img/vision.png" alt="رؤية 2030"><img src="./assets/img/talbiya_initiative.png" alt="مبادرة/شركة تلبية"></div>
+  </div>
+  <div class="container"><nav class="nav">
+    <a class="btn" href="./index.html">الرئيسية</a>
+    <a class="btn" href="./modules/subscriptions.html">الاشتراكات</a>
+    <a class="btn" href="./login.html">الحسابات</a>
+    <a class="btn" href="./modules/facility-market.html">سوق المرافق</a>
+    <a class="btn" href="./partners/index.html">الشركاء الاستراتيجيون</a>
+    <a class="btn" href="./modules/support.html">الدعم الفني</a>
+    <span style="margin-inline-start:auto"></span><a class="btn btn-primary" href="./login.html">ابدأ الآن</a>
+  </nav></div>
+</header>
+
+<main class="container" style="padding:14px 0">
+<section class="hero">
+  <div class="cover">
+    <div class="card">
+      <div class="section-title">واجهة وطنية — ربط التحديات بالحلول</div>
+      <p>قصص أثر حقيقية، تمويل وتنفيذ، و<span class="badge">مواءمة 2030</span> بمستوياتها <b>(6/27/96)</b>، عبر منصة موحّدة تجمع كل القطاعات.</p>
+      <div class="kpis">
+        <div class="kpi"><h3>مشاريع</h3><div id="k1" class="v">—</div></div>
+        <div class="kpi"><h3>تمويل (مليون)</h3><div id="k2" class="v">—</div></div>
+        <div class="kpi"><h3>فعاليات</h3><div id="k3" class="v">—</div></div>
+        <div class="kpi"><h3>شركاء</h3><div id="k4" class="v">—</div></div>
+      </div>
+      <canvas id="kpiChart" style="margin-top:14px; height:220px"></canvas>
+    </div>
+    <div class="hero-visual"><div class="img"></div><div class="illus">التكامل • الشراكات • الأثر</div></div>
+  </div><div class="ribbon"></div>
+</section>
+
+<section class="card" style="margin-top:18px">
+  <div class="section-title">قصص أثر</div>
+  <div class="grid4">
+    <div class="story"><div class="dot">01</div><div><b>تمويل مبادرة للتمكين في حائل</b><div class="feat">رعاية مشتركة (خاص/غير ربحي) نتج عنها 120 مستفيدًا وشراكات دائمة.</div></div></div>
+    <div class="story"><div class="dot">02</div><div><b>تدريب تعاوني مع جامعة وطنية</b><div class="feat">ربط 45 طالبًا بجهات وفق مهاراتهم وميولهم.</div></div></div>
+    <div class="story"><div class="dot">03</div><div><b>سوق المرافق</b><div class="feat">حجوزات شفافة مع خرائط ومؤشرات استخدام.</div></div></div>
+    <div class="story"><div class="dot">04</div><div><b>مطابقة معايير المنح</b><div class="feat">تصفية ذكية للفرص وفق سياسات المانحين.</div></div></div>
+  </div>
+</section>
+
+<section class="card" style="margin-top:18px">
+  <div class="section-title">أخبار وإعلانات</div>
+  <div id="news" class="grid4"></div>
+</section>
+
+<section class="card" style="margin-top:18px">
+  <div class="section-title">الشركاء الاستراتيجيون</div>
+  <div id="partners" class="logo-rail"></div>
+  <div class="toolbar"><a class="btn" href="./partners/index.html">انتقال إلى ملف الشركاء</a></div>
+</section>
+
+<section class="card" style="margin-top:18px">
+  <div class="section-title">أنشطة المنصة حسب المناطق</div>
+  <div id="map" class="map"></div>
+</section>
+</main>
+
+<footer class="footer">© Hasseef — جميع الحقوق محفوظة</footer>
+
+<script>
+(async function(){
+  const r = await fetch('./assets/demo/home.json?v=3002'); const d = await r.json();
+  ['k1','k2','k3','k4'].forEach((id,i)=>HS.countUp(document.getElementById(id), [d.kpis.projects, d.kpis.funding, d.kpis.events, d.kpis.partners][i]));
+  document.getElementById('partners').innerHTML = d.partners.map(p=>`<img src="./assets/partners/${p}.svg" alt="${p}">`).join('');
+  drawLine('kpiChart',['ينا','فبر','مار','أبر','ماي','يون'],[
+    {label:'مبادرات',data:[5,7,12,9,14,16],tension:.35,borderWidth:3,borderColor:'#0e8a3d',fill:false},
+    {label:'تمويل (مليون)',data:[1.2,1.6,2.4,2.1,3.1,4.0],tension:.35,borderWidth:3,borderColor:'#caa446',fill:false}
+  ]);
+  initMap('map', d.markers);
+  document.getElementById('news').innerHTML = d.news.map(n=>`<div class="news-card"><img src="${n.img}"><div><b>${n.title}</b><div class="feat">${n.desc}</div><div class="badge">${n.date}</div></div></div>`).join('');
+})();
+</script>
+</body></html>
